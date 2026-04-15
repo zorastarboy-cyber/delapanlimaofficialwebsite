@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -25,8 +24,10 @@ body.light {
     color: #333;
 }
 
+/* HERO 16:9 */
 .hero {
-    height: 65vh;
+    width: 100%;
+    aspect-ratio: 16 / 9;
     background: url('https://i.ibb.co.com/C3ndH2RQ/IMG-20260126-WA0215.jpg') center/cover no-repeat;
     display: flex;
     align-items: center;
@@ -115,6 +116,7 @@ nav button:hover {
     border-radius: 15px;
 }
 
+/* MUSIC */
 .music-btn {
     position: fixed;
     bottom: 20px;
@@ -136,23 +138,74 @@ nav button:hover {
     display: none;
 }
 
+/* INFO SLIDE KIRI */
 .info-box {
     position: fixed;
     bottom: 15px;
     left: 15px;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0,0,0,0.25);
     color: white;
     padding: 12px 15px;
     border-radius: 12px;
     font-size: 12px;
     z-index: 9999;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     max-width: 220px;
+    border: 1px solid rgba(255,255,255,0.15);
+
+    transform: translateX(-120%);
+    opacity: 0;
+    transition: all 0.6s ease;
+}
+
+.info-box.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.info-box.hide {
+    transform: translateX(-120%);
+    opacity: 0;
 }
 
 body.light .info-box {
-    background: rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.3);
     color: #333;
+}
+
+/* === TAMBAHAN FITUR === */
+
+/* JAM */
+.clock {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: rgba(0,0,0,0.4);
+    padding: 10px 15px;
+    border-radius: 12px;
+    font-size: 14px;
+    backdrop-filter: blur(6px);
+    z-index: 9999;
+}
+
+/* NOTIF */
+.notif {
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.7);
+    padding: 12px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    backdrop-filter: blur(10px);
+    transition: 0.5s;
+    z-index: 9999;
+}
+
+.notif.show {
+    top: 20px;
 }
 </style>
 </head>
@@ -160,6 +213,12 @@ body.light .info-box {
 <body>
 
 <div class="toggle" onclick="toggleMode()">🌙 / ☀️</div>
+
+<!-- JAM -->
+<div class="clock" id="clock">00:00:00</div>
+
+<!-- NOTIF -->
+<div class="notif" id="notif">📢 ZORA NIH DECK!</div>
 
 <div class="hero">
     <div class="overlay">
@@ -206,10 +265,8 @@ body.light .info-box {
     <div class="card">Budi & Dina</div>
 </div>
 
-<!-- CHAT DIGANTI WHATSAPP -->
 <div id="chat" class="content">
     <h2>💬 Chat Nomor</h2>
-
     <div class="card">
         <a href="https://wa.me/6285835334152" target="_blank" style="text-decoration:none;">
             <div style="background:rgba(255,255,255,0.15);padding:12px;border-radius:12px;color:white;">
@@ -218,7 +275,6 @@ body.light .info-box {
             </div>
         </a>
     </div>
-
 </div>
 
 <!-- MUSIC -->
@@ -230,13 +286,12 @@ body.light .info-box {
 
 <button class="music-btn" onclick="toggleMusic()">🎵 Music</button>
 
-<div class="info-box">
+<div class="info-box" id="infoBox">
     <b>INFORMASI !</b><br>
     WEBSITE INI MASIH TAHAP PENGERJAAN, BELUM 100% JADI
 </div>
 
 <script>
-
 function showPage(id){
     document.querySelectorAll(".content").forEach(e=>e.classList.remove("active"));
     document.getElementById(id).classList.add("active");
@@ -259,13 +314,38 @@ function toggleMusic(){
     }
 }
 
-/* AUTOPLAY MUSIC */
+/* ANIMASI INFO */
 window.addEventListener("load", function(){
     let audio = document.getElementById("audio");
     audio.volume = 0.7;
     audio.play().catch(()=>{});
+
+    let info = document.getElementById("infoBox");
+
+    setTimeout(() => {
+        info.classList.add("show");
+    }, 500);
+
+    setTimeout(() => {
+        info.classList.add("hide");
+    }, 4500);
 });
 
+/* JAM */
+function updateClock(){
+    let now = new Date();
+    let time = now.toLocaleTimeString('id-ID');
+    document.getElementById("clock").innerText = time;
+}
+setInterval(updateClock, 1000);
+
+/* NOTIF */
+window.addEventListener("load", function(){
+    let notif = document.getElementById("notif");
+
+    setTimeout(()=>notif.classList.add("show"), 1000);
+    setTimeout(()=>notif.classList.remove("show"), 5000);
+});
 </script>
 
 </body>
